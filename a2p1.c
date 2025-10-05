@@ -158,11 +158,12 @@ int main(void){
         return 1; 
     }
 
-    //write headers
+    //write headers in files 
     fprintf(f_details,"latency,pid,arrival,start,finish,turnaround,waiting,response\n");
+    
     fprintf(f_summary,"latency,throughput,avg_wait,avg_turnaround,avg_response\n");
 
-    //sweep latency 
+    //simulate latency 
     for(int L=1; L<=200; L++){
         simulate_and_write(rs.data, rs.size, L, f_details, f_summary);
     }
