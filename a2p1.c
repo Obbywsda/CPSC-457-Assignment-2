@@ -9,7 +9,7 @@ typedef struct {
     int arrival;
     int first_resp; 
     int burst;
-    int index;      // original order (in case you ever want a stable tie-break)
+    int index;      
 } Row;
 
 //dynamic array to save the rows 
