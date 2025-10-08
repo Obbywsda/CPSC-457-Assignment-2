@@ -168,6 +168,9 @@ int main(void){
         simulate_and_write(rs.data, rs.size, L, f_details, f_summary);
     }
 
+    printf("RR simulation completed! Results saved to fcfs_results.csv");
+    printf("Average results saved to fcfs_results_details.csv");
+    
     fclose(f_details);
     fclose(f_summary);
     free(rs.data);
