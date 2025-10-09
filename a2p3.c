@@ -3,7 +3,8 @@
 #include <string.h>
 
 typedef struct{
-    double throughput;
+    double arrival;
+    double finish_time;
     double waiting_time;
     double turnaround_time;  
     double response_time;
@@ -33,21 +34,22 @@ typedef struct{
     ProcList *unfinishedProc;
     DataList *unfinishedData;
     DataList *finishedData;
-    
+    int totalTime;
 } queues;
 
 //init list with 0
-static void list_init(DataList *pl){
+static void proc_list_init(ProcList *pl){
     pl->data = NULL;
     pl->size = 0;
     pl->cap = 0;
 }
 
-static void list_init(DataList *pl){
+static void data_list_init(DataList *pl){
     pl->data = NULL;
     pl->size = 0;
     pl->cap = 0;
 }
+
 
 //add process to the list, and grow the array
 static void proc_list_push(ProcList *pl, Proc p){
@@ -70,7 +72,7 @@ static void data_list_push(DataList *pl, dataValue p){
 
     if (pl->size == pl->cap){
         size_t nc = pl->cap ? pl->cap * 2 : 256;
-        Proc *tmp = (Proc*)realloc(pl->data, nc * sizeof(Proc));
+        dataValue *tmp = (dataValue*)realloc(pl->data, nc * sizeof(dataValue));
 
         if (!tmp) {
             fprintf(stderr, "out of memory\n");
@@ -179,7 +181,7 @@ static void q_free(procQueue *q) {
     q->cap = q->head = q->tail = 0;
 }
 
-static queues simulate_rr(const Proc* p, size_t n, int quantum, int latency){
+static queues simulate_rr(const Proc* p, size_t n, int quantum, int latency, const dataValue* a, int time){
 
     if (n == 0) return;
 
@@ -187,7 +189,7 @@ static queues simulate_rr(const Proc* p, size_t n, int quantum, int latency){
     int *first_start = malloc(sizeof(int) * n);
     int *finish = malloc(sizeof(int) * n);
     ProcList pl1;
-    list_init(&pl1);
+    proc_list_init(&pl1);
 
     //check to see if there is enouogh memory
     if (!rem || !first_start || !finish){
@@ -209,7 +211,6 @@ static queues simulate_rr(const Proc* p, size_t n, int quantum, int latency){
     q_init(&rq, (int)n * 2 + 4);
 
     //rr simulation clock
-    int time = 0;
     //index of the next process set by arrival time
     size_t next_arr = 0;
     //how many process are done
@@ -275,11 +276,11 @@ static queues simulate_rr(const Proc* p, size_t n, int quantum, int latency){
             proc_list_push(&pl1,p[pass]);
             pl1.data[sizeof(pl1.data)].arrival = 0;
             pl1.data[sizeof(pl1.data)].burst = rem[i];
-            int turnaround = finish[i] - p[i].arrival;
-            int waiting = turnaround - p[i].burst;
             int response = (first_start[i] - p[i].arrival) + p[i].first_resp;
             dataValue temp;
-            temp.
+            temp.arrival = p[i].arrival;
+            temp.finish_time += finish[i];
+            temp.response_time = response;
         } 
         //if the process is finished
         else {
@@ -290,8 +291,12 @@ static queues simulate_rr(const Proc* p, size_t n, int quantum, int latency){
             int turnaround = finish[i] - p[i].arrival;
             int waiting = turnaround - p[i].burst;
             int response = (first_start[i] - p[i].arrival) + p[i].first_resp;
-            
-            //write values to file
+            dataValue temp;
+            temp.arrival = p[i].arrival;
+            temp.finish_time += finish[i];
+            temp.response_time = response;
+            temp.turnaround_time = turnaround;
+            temp.waiting_time = waiting;
 
             
         }
@@ -335,7 +340,7 @@ int main(void){
 
     //create list
     ProcList pl;
-    list_init(&pl);
+    proc_list_init(&pl);
 
     while (fgets(line, sizeof(line), stdin)){
 
@@ -358,9 +363,14 @@ int main(void){
         //add it to the queue
         proc_list_push(&pl, pr);
     }
-    double
+    
     const int latency = 20;
-    for (int q = 1; q <= 200; q++) {
-        simulate_rr(pl.data, pl.size, q, latency, f_details, f_summary);
-    }
+    queues ness;
+    DataList unfinished;
+    data_list_init(&unfinished);
+    ness.unfinishedData = &unfinished;
+    simulate_rr(pl.data, pl.size, 40, latency, unfinished.data, 0);
+    
+
+    return 0;
 }
