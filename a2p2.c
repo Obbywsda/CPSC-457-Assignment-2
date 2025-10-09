@@ -244,7 +244,7 @@ static void simulate_rr(const Proc *p, size_t n, int quantum, int latency, FILE 
             int response = (first_start[i] - p[i].arrival) + p[i].first_resp;
             
             //write values to file
-            fprintf(f_details, "%d,%d,%d,%d,%d,%d,%d,%d,%d\n", latency, quantum, p[i].pid, p[i].arrival, first_start[i], finish[i], 
+            fprintf(f_details, "%d,%d,%d,%d,%d,%d,%d,%d\n", quantum, p[i].pid, p[i].arrival, first_start[i], finish[i], 
                 turnaround, waiting, response);
 
             done++;
