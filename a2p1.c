@@ -89,8 +89,7 @@ static void simulate_and_write(const Row *arr, size_t n, int latency, FILE *f_de
         total_resp += response;
 
         //write simulated values
-        fprintf(f_details,"%d,%d,%d,%lld,%lld,%lld,%lld,%lld\n",
-                latency, p->pid, p->arrival, start, finish, turnaround, waiting, response);
+        fprintf(f_details,"%d,%d,%d,%lld,%lld,%lld,%lld,%lld\n", latency, p->pid, p->arrival, start, finish, turnaround, waiting, response);
 
         current_time=finish;
         last_finish=finish;
@@ -159,17 +158,17 @@ int main(void){
     }
 
     //write headers in files 
-    fprintf(f_details,"latency,pid,arrival,start,finish,turnaround,waiting,response\n");
+    fprintf(f_details,"Scheduler_Latency,Pid,Arrival Time,Start Time,Finish Time,Turnaround Time,Waiting Time,Response Time\n");
     
-    fprintf(f_summary,"latency,throughput,avg_wait,avg_turnaround,avg_response\n");
+    fprintf(f_summary,"Scheduler_Latency,Throughput,Avg_Waiting_Time,Avg_Turnaround_Time,Avg_Response_Time\n");
 
     //simulate latency 
     for(int L=1; L<=200; L++){
         simulate_and_write(rs.data, rs.size, L, f_details, f_summary);
     }
 
-    printf("RR simulation completed! Results saved to fcfs_results.csv");
-    printf("Average results saved to fcfs_results_details.csv");
+    printf("RR simulation completed! Results saved to fcfs_results.csv\n");
+    printf("Average results saved to fcfs_results_details.csv\n");
     
     fclose(f_details);
     fclose(f_summary);
