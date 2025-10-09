@@ -97,11 +97,11 @@ static void simulate_and_write(const Row *arr, size_t n, int latency, FILE *f_de
     }
 
     //find averages by dividing by job count
-    double dn = (double)n;
+    double dn = n;
     double avg_wait= total_wait/dn;
     double avg_turn= total_turn/dn;
     double avg_resp=total_resp/dn;
-    double elapsed = (last_finish>first_arrival)? (last_finish-first_arrival) : 1.0;
+    double elapsed = last_finish - first_arrival;
     double throughput = dn/elapsed;
 
     fprintf(f_summary,"%d,%.6f,%.2f,%.2f,%.2f\n", latency, throughput, avg_wait, avg_turn, avg_resp);
