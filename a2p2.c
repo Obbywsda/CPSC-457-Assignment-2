@@ -272,7 +272,8 @@ static void simulate_rr(const Proc *p, size_t n, int quantum, int latency, FILE 
     double avg_wait = sum_wait/dn;
     double avg_turn = sum_turn/dn;
     double avg_resp = sum_resp/dn;
-    double throughput = last_finish - first_arrival;
+    double elapsed = last_finish - first_arrival;
+    double throughput = dn/elapsed;
 
     fprintf(f_summary, "%d,%.6f,%.2f,%.2f,%.2f\n", quantum, throughput, avg_wait, avg_turn, avg_resp);
 
