@@ -327,15 +327,18 @@ int main(void){
     FILE *f_summary = fopen("rr_results.csv", "w");
 
 
-    // CSV headers
-    fprintf(f_details, "latency,quantum,pid,arrival,start,finish,turnaround,waiting,response\n");
-    fprintf(f_summary, "quantum,throughput,avg_wait,avg_turnaround,avg_response\n");
+    //output headers
+    fprintf(f_details, "Quantum_size,Pid,Arrival Time,Start Time,Finish Time,Turnaround Time,Waiting Time,Response Time\n");
+    fprintf(f_summary, "Quantum_size,Throughput,Avg_Waiting_Time,Avg_Turnaround_Time,Avg_Response_Time\n");
 
     // Assignment Part II: sweep quantum 1..200, latency fixed at 20
     const int latency = 20;
     for (int q = 1; q <= 200; q++) {
         simulate_rr(pl.data, pl.size, q, latency, f_details, f_summary);
     }
+
+    printf("RR simulation completed! Results saved to rr_results.csv\n");
+    printf("Average results saved to rr_results_details.csv\n");
 
     fclose(f_details);
     fclose(f_summary);
